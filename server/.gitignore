@@ -26,3 +26,6 @@ seeders/
 # Build output (if used)
 dist/
 build/
+
+/uploads/
+

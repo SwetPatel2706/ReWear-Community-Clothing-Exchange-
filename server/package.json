@@ -1,9 +1,11 @@
 {
   "name": "rewear",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "ReWear - Community Clothing Exchange",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,5 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.3",
     "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }

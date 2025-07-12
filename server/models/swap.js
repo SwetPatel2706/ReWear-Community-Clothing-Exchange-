@@ -1,8 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('Swap', {
+  const Swap = sequelize.define('Swap', {
     status: {
       type: DataTypes.ENUM('pending', 'accepted', 'declined'),
       defaultValue: 'pending'
     }
   });
+  return Swap;
 };

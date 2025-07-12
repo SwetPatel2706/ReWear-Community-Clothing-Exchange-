@@ -6,6 +6,10 @@ const db = require('../models'); // Sequelize models
 const register = async (req, res) => {
   const { username, email, password } = req.body;
 
+  if (!username || !email || !password) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
   try {
     const existingUser = await db.User.findOne({ where: { email } });
 
@@ -22,7 +26,7 @@ const register = async (req, res) => {
     });
 
     res.status(201).json({
-      message: 'User created',
+      message: 'User registered successfully',
       user: {
         id: newUser.id,
         username: newUser.username,
@@ -30,6 +34,7 @@ const register = async (req, res) => {
       }
     });
   } catch (err) {
+    console.error('Registration error:', err);
     res.status(500).json({ error: 'Registration failed' });
   }
 };
@@ -37,6 +42,10 @@ const register = async (req, res) => {
 // LOGIN
 const login = async (req, res) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
 
   try {
     const user = await db.User.findOne({ where: { email } });
@@ -52,12 +61,13 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id },
+      { id: user.id, username: user.username }, // Include username for convenience
       process.env.JWT_SECRET,
       { expiresIn: '2h' }
     );
 
     res.json({
+      message: 'Login successful',
       token,
       user: {
         id: user.id,
@@ -66,6 +76,7 @@ const login = async (req, res) => {
       }
     });
   } catch (err) {
+    console.error('Login error:', err);
     res.status(500).json({ error: 'Login failed' });
   }
 };

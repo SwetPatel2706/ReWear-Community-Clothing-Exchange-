@@ -1,20 +1,22 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('Item', {
-    title: {
+  const Item = sequelize.define('Item', {
+    name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    description: DataTypes.TEXT,
-    size: DataTypes.STRING,
-    condition: {
-      type: DataTypes.ENUM('New', 'Lightly Used', 'Used'),
+    description: {
+      type: DataTypes.STRING,
       allowNull: false
     },
-    category: DataTypes.STRING,
-    image_url: DataTypes.TEXT,
-    status: {
-      type: DataTypes.ENUM('available', 'swapped'),
-      defaultValue: 'available'
+    image: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   });
+
+  return Item;
 };
