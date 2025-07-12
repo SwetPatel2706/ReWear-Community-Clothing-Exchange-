@@ -1,17 +1,27 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeSlash } from 'react-bootstrap-icons';
+import axios from '../services/api'; // ✅ Your axiosInstance
 
 function LoginPage() {
-    const [showPassword, setShowPassword] = useState(false);
-    const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        // Add login logic here if needed
-        navigate('/landing');
-    };
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post('/auth/login', { email, password });
+
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      
+      navigate('/landing');
+    } catch (err) {
+      alert(err.response?.data?.error || 'Login failed');
+    }
+  };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
@@ -23,13 +33,22 @@ function LoginPage() {
 
         <form onSubmit={handleLogin}>
           <div className="mb-3">
-            <input type="text" className="form-control" placeholder="Username" required />
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
           <div className="mb-3 position-relative">
             <input
               type={showPassword ? 'text' : 'password'}
               className="form-control"
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
             <span
