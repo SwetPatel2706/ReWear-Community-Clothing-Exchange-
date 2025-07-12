@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeSlash } from 'react-bootstrap-icons';
-import axios from '../services/api'; // ✅ Your axiosInstance
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -9,17 +8,14 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post('/auth/login', { email, password });
-
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
-      
+    // Demo: Accept any email/password, or add your own logic here
+    if (email && password) {
+      localStorage.setItem('user', JSON.stringify({ email }));
       navigate('/landing');
-    } catch (err) {
-      alert(err.response?.data?.error || 'Login failed');
+    } else {
+      alert('Please enter email and password');
     }
   };
 
