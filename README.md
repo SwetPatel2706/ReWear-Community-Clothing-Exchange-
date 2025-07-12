@@ -124,10 +124,4 @@ All protected routes require Bearer token in headers.
 * 🔲 Sort/filter listings
 * 🔲 Reward-based point system
 
----
 
-Let me know if you want me to:
-
-* Create this file directly in your repo
-* Split it into separate Dev/Prod setup
-* Or add screenshots/badges/deployment instructions
