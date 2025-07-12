@@ -2,7 +2,7 @@
 node_modules/
 
 # Environment variables
-.env
+
 
 # Logs
 logs
@@ -26,6 +26,4 @@ seeders/
 # Build output (if used)
 dist/
 build/
-
-/uploads/
 
