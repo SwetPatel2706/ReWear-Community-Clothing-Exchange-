@@ -9,31 +9,29 @@ const sequelize = new Sequelize(
     host: dbConfig.host,
     port: dbConfig.port,
     dialect: dbConfig.dialect,
+    logging: false
   }
 );
 
 const db = {};
 
-db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+db.sequelize = sequelize;
 
-// Load models
 db.User = require('./user')(sequelize, DataTypes);
 db.Item = require('./item')(sequelize, DataTypes);
-db.Swap = require('./swap')(sequelize, DataTypes);
-// db.Point = require('./point')(sequelize, DataTypes); // Optional
 
-// Define relationships
-db.User.hasMany(db.Item);
-db.Item.belongsTo(db.User);
-
-db.User.hasMany(db.Swap, { as: 'RequestedSwaps', foreignKey: 'requesterId' });
-db.User.hasMany(db.Swap, { as: 'ReceivedSwaps', foreignKey: 'ownerId' });
-db.Item.hasOne(db.Swap);
-db.Swap.belongsTo(db.Item);
-
-// If you use Point model later, uncomment these:
-// db.User.hasMany(db.Point);
-// db.Point.belongsTo(db.User);
+// Associations
+db.User.hasMany(db.Item, { foreignKey: 'userId' });
+db.Item.belongsTo(db.User, { foreignKey: 'userId' });
 
 module.exports = db;
+
+db.Swap = require('./swap')(sequelize, DataTypes);
+
+db.User.hasMany(db.Swap, { foreignKey: 'requesterId', as: 'RequestedSwaps' });
+db.User.hasMany(db.Swap, { foreignKey: 'ownerId', as: 'ReceivedSwaps' });
+db.Swap.belongsTo(db.User, { foreignKey: 'requesterId' });
+db.Swap.belongsTo(db.User, { foreignKey: 'ownerId' });
+db.Swap.belongsTo(db.Item, { foreignKey: 'itemId' });
+db.Item.hasOne(db.Swap, { foreignKey: 'itemId' });
