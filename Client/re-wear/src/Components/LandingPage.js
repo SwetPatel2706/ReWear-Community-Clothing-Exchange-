@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -23,14 +23,39 @@ function LandingPage() {
     navigate("/profile");
   };
 
-    const [showModal, setShowModal] = useState(false);
-    const [selectedImage, setSelectedImage] = useState('');
-    const handleCardClick = (imageUrl) => {
-        setSelectedImage(imageUrl);
-        setShowModal(true);
-    };
+  const [showModal, setShowModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
+  const handleCardClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setShowModal(true);
+  };
 
-    const handleClose = () => setShowModal(false);
+  const handleClose = () => setShowModal(false);
+
+  // Cart state
+  const [cart, setCart] = useState(() => {
+    // Load cart from localStorage if available
+    const saved = localStorage.getItem('cart');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
+  // ...existing state and handlers...
+
+  // Add to cart handler
+  const handleAddToCart = () => {
+    // For demo, use selectedImage as product image and a dummy title
+    const product = {
+      image: selectedImage,
+      title: selectedImage.split('=')[1] || 'Product',
+    };
+    setCart([...cart, product]);
+    setShowModal(false);
+  };
 
   return (
     <div>
@@ -41,11 +66,21 @@ function LandingPage() {
         className="px-4 shadow-sm d-flex justify-content-between"
       >
         <Navbar.Brand href="#">Re-Wear</Navbar.Brand>
-        <div
-          onClick={handleProfileClick}
-          style={{ cursor: "pointer", fontSize: "1.5rem" }}
-        >
-          👤
+        <div className="d-flex align-items-center">
+          <Button
+            variant="outline-primary"
+            size="sm"
+            className="me-3"
+            onClick={() => navigate("/checkout")}
+          >
+            Checkout
+          </Button>
+          <div
+            onClick={handleProfileClick}
+            style={{ cursor: "pointer", fontSize: "1.5rem" }}
+          >
+            👤
+          </div>
         </div>
       </Navbar>
 
@@ -102,12 +137,18 @@ function LandingPage() {
               <Card className="h-100 shadow-sm">
                 <Card.Img
                   variant="top"
-                  src={`https://via.placeholder.com/200x150.png?text=Product+${idx + 1}`}
+                  src={`https://via.placeholder.com/200x150.png?text=Product+${
+                    idx + 1
+                  }`}
                   alt={`Product ${idx + 1}`}
                   onClick={() =>
-                    handleCardClick(`https://via.placeholder.com/600x400.png?text=Product+${idx + 1}`)
+                    handleCardClick(
+                      `https://via.placeholder.com/600x400.png?text=Product+${
+                        idx + 1
+                      }`
+                    )
                   }
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                 />
                 <Card.Body className="text-center">
                   <Card.Title>Product {idx + 1}</Card.Title>
@@ -131,6 +172,9 @@ function LandingPage() {
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
+          </Button>
+          <Button variant="success" onClick={handleAddToCart}>
+            Add to Cart
           </Button>
         </Modal.Footer>
       </Modal>
