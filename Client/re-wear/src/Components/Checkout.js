@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Card, Row, Col, Button } from "react-bootstrap";
+import jsPDF from "jspdf";
 
 function Checkout() {
   const [cart, setCart] = useState([]);
@@ -9,9 +10,23 @@ function Checkout() {
     setCart(saved ? JSON.parse(saved) : []);
   }, []);
 
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Order Summary Receipt", 10, 15);
+    doc.setFontSize(12);
+    let y = 30;
+    cart.forEach((item, idx) => {
+      doc.text(`Product ${idx + 1}: ${item.title || "Product"}`, 10, y);
+      y += 8;
+    });
+    doc.text("Thank you for your order! Please pay on delivery.", 10, y + 10);
+    doc.save("order-summary.pdf");
+  };
+
   const handlePayOnDelivery = () => {
     alert("Order placed! You can pay on delivery.");
-    // Optionally, clear cart after order
+    generatePDF();
     localStorage.removeItem('cart');
     setCart([]);
   };

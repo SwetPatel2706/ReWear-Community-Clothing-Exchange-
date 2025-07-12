@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -44,8 +43,6 @@ function LandingPage() {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
-  // ...existing state and handlers...
-
   // Add to cart handler
   const handleAddToCart = () => {
     // For demo, use selectedImage as product image and a dummy title
@@ -56,6 +53,19 @@ function LandingPage() {
     setCart([...cart, product]);
     setShowModal(false);
   };
+
+  // Categories array
+  const categories = [
+    "Men's Clothing",
+    "Women's Clothing",
+    "Kids",
+    "Traditional wear",
+    "Footwear",
+    "Winter Wear"
+  ];
+
+  // Product images array for listings
+  const productImages = [image1, image2, image3, image1];
 
   return (
     <div>
@@ -118,10 +128,10 @@ function LandingPage() {
       <Container className="mt-5">
         <h5 className="mb-3">Categories Section</h5>
         <Row className="g-3">
-          {[...Array(6)].map((_, idx) => (
+          {categories.map((cat, idx) => (
             <Col xs={6} md={4} key={idx}>
               <div className="bg-light border rounded py-4 text-center">
-                Category {idx + 1}
+                {cat}
               </div>
             </Col>
           ))}
@@ -132,22 +142,14 @@ function LandingPage() {
       <Container className="mt-5 mb-4">
         <h5 className="mb-3">Product Listings</h5>
         <Row className="g-4">
-          {[...Array(4)].map((_, idx) => (
+          {productImages.map((img, idx) => (
             <Col xs={12} md={3} key={idx}>
               <Card className="h-100 shadow-sm">
                 <Card.Img
                   variant="top"
-                  src={`https://via.placeholder.com/200x150.png?text=Product+${
-                    idx + 1
-                  }`}
+                  src={img}
                   alt={`Product ${idx + 1}`}
-                  onClick={() =>
-                    handleCardClick(
-                      `https://via.placeholder.com/600x400.png?text=Product+${
-                        idx + 1
-                      }`
-                    )
-                  }
+                  onClick={() => handleCardClick(img)}
                   style={{ cursor: "pointer" }}
                 />
                 <Card.Body className="text-center">
@@ -179,7 +181,6 @@ function LandingPage() {
         </Modal.Footer>
       </Modal>
     </div>
-  );
+  )
 }
-
 export default LandingPage;
